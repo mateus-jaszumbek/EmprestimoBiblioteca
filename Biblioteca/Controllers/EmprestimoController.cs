@@ -1,6 +1,7 @@
 ﻿using Biblioteca.Data;
 using Biblioteca.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Biblioteca.Controllers
@@ -46,12 +47,12 @@ namespace Biblioteca.Controllers
 
             EmprestimoModels emprestimo = _db.Emprestimos.FirstOrDefault(x => x.Id == id);
 
-            if (emprestimo == null) { NotFound(); }
+            if (emprestimo == null) { return NotFound(); }
 
             return View(emprestimo);
         }
 
-        [HttpPost("EditarEmprestimo/{id}")]
+        [HttpPost]
         public IActionResult Cadastrar(EmprestimoModels emprestimos)
         {
             if (ModelState.IsValid)
@@ -59,10 +60,13 @@ namespace Biblioteca.Controllers
                 _db.Emprestimos.Add(emprestimos);
                 _db.SaveChanges();
 
+                TempData["MensagemSucesso"] = "Cadastro realizado com sucesso!";
+
                 return RedirectToAction("Index");
             }
             return View();
         }
+
         [HttpPost]
         public IActionResult Editar(EmprestimoModels emprestimo)
         {
@@ -70,6 +74,8 @@ namespace Biblioteca.Controllers
             {
                 _db.Emprestimos.Update(emprestimo);
                 _db.SaveChanges();
+
+                TempData["MensagemSucesso"] = "Edição realizada com sucesso!";
 
                 return RedirectToAction("Index");
             }
@@ -84,6 +90,8 @@ namespace Biblioteca.Controllers
 
             _db.Emprestimos.Remove(emprestimo);
             _db.SaveChanges();
+
+            TempData["MensagemSucesso"] = "Exclusão realizada com sucesso!";
 
             return RedirectToAction("Index");
         }
