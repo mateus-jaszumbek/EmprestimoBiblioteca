@@ -3,6 +3,7 @@ using Biblioteca.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using ClosedXML.Excel;
 
 namespace Biblioteca.Controllers
 {
@@ -52,6 +53,44 @@ namespace Biblioteca.Controllers
             return View(emprestimo);
         }
 
+        public IActionResult Exportar()
+        {
+            var dados = GetDados();
+            using (XLWorkbook workbook = new XLWorkbook())
+            {
+                workbook.AddWorksheet(dados, "Dados Emprestimo");
+
+                using (MemoryStream memoriaString = new MemoryStream())
+                {
+                    workbook.SaveAs(memoriaString);
+                    return File(memoriaString.ToArray(), "apllication/vnd.openxmlformats-officedocument.spredsheetml.sheet", "Emprestimo.xls");
+                }
+            }
+        }
+
+        private DataTable GetDados()
+        {
+            DataTable dataTable = new DataTable();
+            dataTable.TableName = "Dados emprestimos";
+            dataTable.Columns.Add("Id", typeof(int));
+            dataTable.Columns.Add("Recebedor", typeof(string));
+            dataTable.Columns.Add("Fornecedor", typeof(string));
+            dataTable.Columns.Add("LivroEmprestado", typeof(string));
+            dataTable.Columns.Add("Data emprestimo", typeof(DateTime));
+
+            var dados = _db.Emprestimos.ToList();
+
+            if (dados.Count > 0)
+            {
+                dados.ForEach(emprestimo =>
+                {
+                    dataTable.Rows.Add(emprestimo.Id, emprestimo.Recebedor, emprestimo.Fornecedor, emprestimo.LivroEmprestado, emprestimo.DataUltimaAtualizacao);
+                });
+            }
+
+            return dataTable;
+        }
+
         [HttpPost]
         public IActionResult Cadastrar(EmprestimoModels emprestimos)
         {
@@ -86,7 +125,7 @@ namespace Biblioteca.Controllers
         [HttpPost]
         public IActionResult Excluir(EmprestimoModels emprestimo)
         {
-            if (emprestimo == null) {  return NotFound(); }
+            if (emprestimo == null) { return NotFound(); }
 
             _db.Emprestimos.Remove(emprestimo);
             _db.SaveChanges();

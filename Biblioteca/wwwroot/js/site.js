@@ -30,4 +30,10 @@ $(document).ready(function () {
         }
     });
 
+    setTimeout(function () {
+        $(".alert").fadedOut("slow", function () {
+            $(this).alert('close');
+        })
+    }, 3000);
+
 });

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Biblioteca.Migrations
 {
     /// <inheritdoc />
-    public partial class criacaoBanco : Migration
+    public partial class Criandobnco : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

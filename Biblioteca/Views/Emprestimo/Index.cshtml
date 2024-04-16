@@ -6,10 +6,17 @@
         <h1>
             Emprestimos
         </h1>
-        <a class="btn btn-success mx-2" asp-controller="Emprestimo" asp-action="Cadastrar">
-            <i class="bi bi-file-earmark-plus mx-1"></i>
-            Cadastrar novo emprestimo
-        </a>
+        <div>
+            <a class="btn btn-success mx-2" asp-controller="Emprestimo" asp-action="Exportar" >
+                <i class="bi bi-file-earmark-plus mx-1"></i>
+                Exportar
+            </a>
+            <a class="btn btn-success mx-2" asp-controller="Emprestimo" asp-action="Cadastrar">
+                <i class="bi bi-file-earmark-plus mx-1"></i>
+                Cadastrar novo emprestimo
+            </a>
+        </div>
+
     </div>
 
     @if (TempData["MensagemSucesso"] != null)
